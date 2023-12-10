@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-r from-purple-900 to-blue-900 text-white font-sans">
+    <div class="flex items-center justify-center h-screen">
+        <div class="bg-gray-800 p-8 rounded shadow-md max-w-md w-full">
+            <h2 class="text-3xl font-semibold mb-4 text-center">User Profile</h2>
+            <div class="flex flex-col items-center">
+                <img src="https://i.pinimg.com/736x/41/75/ba/4175ba5ba6d3c2dbd42ce22229b986d8.jpg" alt="Profile Picture"
+                    class="rounded-full h-32 w-32 mb-4">
+                <p class="text-lg font-semibold">Username: <%= username %>
+                </p>
+
+                <a href="/logout"
+                    class="mt-4 bg-red-500 hover:bg-red-600 text-white rounded px-4 py-2 block text-center w-full">Logout</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

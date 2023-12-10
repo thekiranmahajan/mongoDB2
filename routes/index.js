@@ -1,11 +1,64 @@
 var express = require("express");
 var router = express.Router();
-
 const userModel = require("./users");
+const localStrategy = require("passport-local");
+const passport = require("passport");
+passport.use(new localStrategy(userModel.authenticate()));
 
 router.get("/", function (req, res) {
-  res.render("index");
+  res.render("index", { messages: req.flash("error") });
 });
+
+router.get("/profile", isLoggedIn, function (req, res) {
+  res.render("profile", { username: req.user.username });
+});
+
+router.post("/register", function (req, res) {
+  var userdata = new userModel({
+    username: req.body.username,
+    secret: req.body.secret,
+  });
+
+  userModel
+    .register(userdata, req.body.password)
+    .then(function (registereduser) {
+      passport.authenticate("local")(req, res, function () {
+        res.redirect("/profile");
+      });
+    })
+    .catch(function (err) {
+      req.flash(
+        "error",
+        "Username already exists or other registration error."
+      );
+      res.redirect("/register"); // Redirect back to registration page
+    });
+});
+
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/profile",
+    failureRedirect: "/",
+    failureFlash: true,
+  }),
+  function (req, res) {}
+);
+
+router.get("/logout", function (req, res, next) {
+  req.logout(function (err) {
+    if (err) return next(err);
+    res.redirect("/");
+  });
+});
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/");
+}
+
 //Intermediate mongoDB:
 
 // router.get("/createuser", async function (req, res) {
@@ -79,17 +132,17 @@ router.get("/", function (req, res) {
 //   res.send(userContainsField);
 // });
 
-router.get("/find", async function (req, res) {
-  let user = await userModel.find({
-    $expr: {
-      $and: [
-        { $gte: [{ $strLenCP: "$description" }, 28] },
-        { $lte: [{ $strLenCP: "$description" }, 100] },
-      ],
-    },
-  });
-  res.send(user);
-});
+// router.get("/find", async function (req, res) {
+//   let user = await userModel.find({
+//     $expr: {
+//       $and: [
+//         { $gte: [{ $strLenCP: "$description" }, 28] },
+//         { $lte: [{ $strLenCP: "$description" }, 100] },
+//       ],
+//     },
+//   });
+//   res.send(user);
+// });
 
 //connect-flash:
 
