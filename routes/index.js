@@ -79,7 +79,17 @@ router.get("/", function (req, res) {
 //   res.send(userContainsField);
 // });
 
-
+router.get("/find", async function (req, res) {
+  let user = await userModel.find({
+    $expr: {
+      $and: [
+        { $gte: [{ $strLenCP: "$description" }, 28] },
+        { $lte: [{ $strLenCP: "$description" }, 100] },
+      ],
+    },
+  });
+  res.send(user);
+});
 
 //connect-flash:
 
