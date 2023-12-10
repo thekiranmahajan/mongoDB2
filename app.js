@@ -10,6 +10,7 @@ var usersRouter = require("./routes/users");
 var app = express();
 const expressSession = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -22,7 +23,13 @@ app.use(
     secret: "hehehehhe",
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(usersRouter.serializeUser());
+passport.deserializeUser(usersRouter.deserializeUser());
+
 app.use(flash());
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
