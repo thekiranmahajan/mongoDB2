@@ -72,6 +72,15 @@ router.get("/", function (req, res) {
 //   res.send(users);
 // });
 
+// router.get("/find", async function (req, res) {
+//   let userContainsField = await userModel.find({
+//     categories: { $exists: true },
+//   });
+//   res.send(userContainsField);
+// });
+
+
+
 //connect-flash:
 
 // router.get("/createdata", function (req, res) {
